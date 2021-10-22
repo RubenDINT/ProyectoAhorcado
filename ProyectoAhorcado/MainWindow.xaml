@@ -5,36 +5,98 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProyectoAhorcado"
         mc:Ignorable="d"
-        Title="Ahorcado" Height="450" Width="800">
+        Title="Ahorcado"
+        Height="450"
+        Width="800"
+        KeyDown="LetraPulsada">
     <Window.Resources>
-        <!--Estilo básico para los botones (Nueva Partida y Rendirse)-->
-        <Style TargetType="{x:Type Button}">
-            <Setter Property="Width" Value="100" ></Setter>
+        <!--Estilo para los botones (Nueva Partida y Rendirse)-->
+        <Style TargetType="{x:Type Button}" x:Key="botonesManejoPartida">
+            <Setter Property="Width" Value="100"></Setter>
             <Setter Property="Height" Value="30"></Setter>
             <Setter Property="Margin" Value="7"></Setter>
         </Style>
+        <!-- Estilo para los botones de las letras -->
+        <Style TargetType="{x:Type Button}" x:Key="botonLetra">
+            <Setter Property="Margin" Value="5"></Setter>
+        </Style>
+        <!-- Estilo básico para aplicar la misma fuente a todo el proyecto -->
         <Style TargetType="{x:Type TextBlock}">
-            <Setter Property="FontFamily" Value="Rubik"></Setter>
+            <Setter Property="FontFamily"
+                    Value="Arial Narrow"></Setter>
+        </Style>
+        <!-- Estilos para el titulo -->
+        <Style TargetType="{x:Type TextBlock}" x:Key="Titulo" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+            <Setter Property="FontSize" Value="40"></Setter>
+            <Setter Property="Foreground">
+                <Setter.Value>
+                    <LinearGradientBrush EndPoint="0.5,1"
+                                             MappingMode="RelativeToBoundingBox"
+                                             StartPoint="0.5,0">
+                        <GradientStop Color="Black"
+                                          Offset="0.327" />
+                        <GradientStop Color="#FF00FFF3"
+                                          Offset="1" />
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- Estilo para el contenedor de la palabra oculta-->
+        <Style TargetType="{x:Type DockPanel}" x:Key="estiloContenedorPalabraOculta">
+            <Setter Property="Width" Value="300"></Setter>
+            <Setter Property="Height" Value="50"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+        </Style>
+        <!-- Estilo para la palabra a adivinar -->
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="estiloPalabraOculta">
+            <Setter Property="TextAlignment" Value="Center"></Setter>
+            <Setter Property="FontSize" Value="35"></Setter>
+            <Setter Property="FontStretch" Value="UltraExpanded"></Setter>
+            <Setter Property="Margin" Value="5,0,5,0"></Setter>
+        </Style>
+            <!-- Estilo para el scrollviewer, ocultamos la barra horizontal porque solo queremos desplazar la palabra horizontalmente-->
+        <Style TargetType="{x:Type ScrollViewer}">
+            <Setter Property="VerticalScrollBarVisibility" Value="Hidden"></Setter>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Auto"></Setter>
+
+
+        </Style>
+        <!-- Estilo para un botón con una letra coincidente -->
+        <Style TargetType="{x:Type Button}" x:Key="estiloLetraEncontrada">
+            <Setter Property="IsEnabled" Value="False"></Setter>
+            <Setter Property="Background" Value="#A5FF51"></Setter>
+        </Style>
+        
+        <!-- Estilo para un botón con una letra que no coincida -->
+        <Style TargetType="{x:Type Button}" x:Key="estiloLetraNoEncontrada">
+            <Setter Property="Background" Value="#FF5151"></Setter>
+            <Setter Property="IsEnabled" Value="False"></Setter>
         </Style>
     </Window.Resources>
     <Grid>
         <DockPanel>
             <DockPanel DockPanel.Dock="Left" Width="300">
-                <StackPanel Orientation="Horizontal"
-                            DockPanel.Dock="Bottom">
-                    <Button>Nueva Partida</Button>
-                    <Button>Rendirse</Button>
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
+                    <Button Style="{StaticResource botonesManejoPartida}">Nueva Partida</Button>
+                    <Button Style="{StaticResource botonesManejoPartida}">Rendirse</Button>
                 </StackPanel>
-                <Image Source="assets/1.jpg"></Image> <!--Imagen del ahorcado (rellena al ser el último hijo -->
+                <Image Source="assets/1.jpg" Margin="10"></Image>
+                <!--Imagen del ahorcado (rellena al ser el último hijo -->
             </DockPanel>
-            <StackPanel Orientation="Vertical">
-                <TextBlock Background="Blue"> Ahorcado </TextBlock> <!--Titulo-->
-                <TextBlock>Palabra</TextBlock> <!--Palabra a adivinar-->
-                <TextBlock></TextBlock> <!--Scroll viewer-->
-                <TextBlock Background="Black"></TextBlock> <!--Letras-->
-            </StackPanel>
-            
+            <DockPanel>
+                <!-- Titulo --> 
+                <TextBlock Style="{StaticResource Titulo}" DockPanel.Dock="Top"> Ahorcado</TextBlock>
+                <!-- Palabra a adivinar -->
+                <ScrollViewer DockPanel.Dock="Top">
+                    <DockPanel x:Name="contenedorPalabraOculta" DockPanel.Dock="Top" Style="{StaticResource estiloContenedorPalabraOculta}"></DockPanel>
+                </ScrollViewer>
+                <!-- Letras -->
+                <UniformGrid x:Name="grid" Rows="3" Columns="9"></UniformGrid>
+            </DockPanel>
+
         </DockPanel>
-        
+
     </Grid>
 </Window>
