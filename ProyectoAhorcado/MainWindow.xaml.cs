@@ -105,6 +105,15 @@ namespace ProyectoAhorcado
                 contadorPosicion++;
             }
 
+            // Comprobamos si al jugador le queda alguna letra por descubrir o si ya ha ganado
+            /*bool haGanado = false;
+
+            foreach (TextBlock a in contenedorPalabraOculta.Children)
+            {
+                if (a.Text == "_") haGanado = false;
+            }
+            if (haGanado) FinDePartidaWin();*/
+
             if (encontrado) LetraEncontrada(b);
             else LetraNoEncontrada(b);
         }
@@ -116,7 +125,7 @@ namespace ProyectoAhorcado
         {
             b.Style = (Style)this.Resources["estiloLetraNoEncontrada"];
             contadorFallos++;
-            if (contadorFallos == 9) FinDePartida();
+            if (contadorFallos == 9) FinDePartidaLose();
             else
             {
                 fallosTextBlock.Text = "Numero de Fallos: " + contadorFallos;
@@ -124,10 +133,14 @@ namespace ProyectoAhorcado
                 ahorcadoImage.Source = new BitmapImage(ruta);
             }
         }
-        private void FinDePartida()
+        private void FinDePartidaLose()
         {
             MessageBox.Show("Has perdido!");
             DeshabilitarBotones();
+        }
+        private void FinDePartidaWin()
+        {
+
         }
         private void Rendirse_Click(object sender, RoutedEventArgs e)
         {
