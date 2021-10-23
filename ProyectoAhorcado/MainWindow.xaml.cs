@@ -120,9 +120,9 @@ namespace ProyectoAhorcado
             else
             {
                 fallosTextBlock.Text = "Numero de Fallos: " + contadorFallos;
-                // ahorcadoImage.Source = $"assets/{contadorFallos}.jpg";
+                Uri ruta = new Uri($"assets/{contadorFallos}.jpg", UriKind.Relative);
+                ahorcadoImage.Source = new BitmapImage(ruta);
             }
-
         }
         private void FinDePartida()
         {
