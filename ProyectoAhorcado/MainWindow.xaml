@@ -8,11 +8,13 @@
         Title="Ahorcado"
         Height="450"
         Width="800"
+        MinWidth="600"
+        MinHeight="300"
         KeyDown="LetraPulsada">
     <Window.Resources>
         <!--Estilo para los botones (Nueva Partida y Rendirse)-->
         <Style TargetType="{x:Type Button}" x:Key="botonesManejoPartida">
-            <Setter Property="Width" Value="100"></Setter>
+            <Setter Property="Width" Value="80"></Setter>
             <Setter Property="Height" Value="30"></Setter>
             <Setter Property="Margin" Value="7"></Setter>
         </Style>
@@ -26,7 +28,7 @@
                     Value="Arial Narrow"></Setter>
         </Style>
         <!-- Estilos para el titulo -->
-        <Style TargetType="{x:Type TextBlock}" x:Key="Titulo" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Style TargetType="{x:Type TextBlock}" x:Key="titulo" BasedOn="{StaticResource {x:Type TextBlock}}">
             <Setter Property="HorizontalAlignment" Value="Center"></Setter>
             <Setter Property="FontSize" Value="40"></Setter>
             <Setter Property="Foreground">
@@ -42,6 +44,10 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <!-- Estilo para el textblock del contador de fallos -->
+        <Style TargetType="{x:Type TextBlock}" x:Key="estiloContenedorFallos" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+        </Style>
         <!-- Estilo para el contenedor de la palabra oculta-->
         <Style TargetType="{x:Type DockPanel}" x:Key="estiloContenedorPalabraOculta">
             <Setter Property="Width" Value="300"></Setter>
@@ -53,7 +59,6 @@
         <Style TargetType="{x:Type TextBlock}" x:Key="estiloPalabraOculta">
             <Setter Property="TextAlignment" Value="Center"></Setter>
             <Setter Property="FontSize" Value="35"></Setter>
-            <Setter Property="FontStretch" Value="UltraExpanded"></Setter>
             <Setter Property="Margin" Value="5,0,5,0"></Setter>
         </Style>
             <!-- Estilo para el scrollviewer, ocultamos la barra horizontal porque solo queremos desplazar la palabra horizontalmente-->
@@ -74,20 +79,24 @@
             <Setter Property="Background" Value="#FF5151"></Setter>
             <Setter Property="IsEnabled" Value="False"></Setter>
         </Style>
+        
     </Window.Resources>
+    
+    
     <Grid>
         <DockPanel>
             <DockPanel DockPanel.Dock="Left" Width="300">
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
-                    <Button Style="{StaticResource botonesManejoPartida}">Nueva Partida</Button>
-                    <Button Style="{StaticResource botonesManejoPartida}">Rendirse</Button>
+                    <Button Style="{StaticResource botonesManejoPartida}" Click="NuevaPartida_Click">Nueva Partida</Button>
+                    <Button Style="{StaticResource botonesManejoPartida}" Click="Rendirse_Click">Rendirse</Button>
+                    <TextBlock x:Name="fallosTextBlock" Style="{StaticResource estiloContenedorFallos}">Número de fallos: 0</TextBlock>
                 </StackPanel>
-                <Image Source="assets/1.jpg" Margin="10"></Image>
+                <Image x:Name="ahorcadoImage" Source="assets/1.jpg" Margin="10" ></Image>
                 <!--Imagen del ahorcado (rellena al ser el último hijo -->
             </DockPanel>
             <DockPanel>
                 <!-- Titulo --> 
-                <TextBlock Style="{StaticResource Titulo}" DockPanel.Dock="Top"> Ahorcado</TextBlock>
+                <TextBlock Style="{StaticResource titulo}" DockPanel.Dock="Top"> Ahorcado</TextBlock>
                 <!-- Palabra a adivinar -->
                 <ScrollViewer DockPanel.Dock="Top">
                     <DockPanel x:Name="contenedorPalabraOculta" DockPanel.Dock="Top" Style="{StaticResource estiloContenedorPalabraOculta}"></DockPanel>

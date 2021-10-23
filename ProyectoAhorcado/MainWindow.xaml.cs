@@ -24,9 +24,8 @@ namespace ProyectoAhorcado
         private List<String> listaPalabras = new List<String>() { "JOAKIN", "ESTERNOCLEIDOMASTOIDEO", "ANDROID", "ESPAÑA", "FRANCIA", "ABECEDARIO", "PENINSULA", "PATATAS" };
         private List<String> listaLetrasEncontradas = new List<String>();
         private List<String> listaLetrasNoEncontradas = new List<String>();
-
+        private int contadorFallos = 0;
         Random seed = new Random();
-        private String palabraOculta;
         private String palabraAAdivinar;
 
 
@@ -49,16 +48,6 @@ namespace ProyectoAhorcado
                         Style = (Style)this.Resources["estiloPalabraOculta"]
                     });
             }
-            /*
-            StringBuilder palabraOcultaSB = new StringBuilder(palabraOculta);
-            for (int i = 0; i < palabraAAdivinar.Length; i++)
-            {
-                palabraOcultaSB.Append("_  ");
-            }
-            palabraOculta = palabraOcultaSB.ToString();
-            contenedorPalabraOculta.Text = palabraOculta;*/
-            
-            
         }
 
         public void CrearBotones()
@@ -75,7 +64,7 @@ namespace ProyectoAhorcado
                     Button b = new Button
                     {
                         Style = (Style)this.Resources["botonLetra"],
-                        Tag = abecedario[contadorLetras],
+                        Tag = abecedario[contadorLetras].ToUpper(),
                         Content = abecedario[contadorLetras].ToUpper(),
                     };
                     b.Click += OnClick;
@@ -91,6 +80,7 @@ namespace ProyectoAhorcado
         }
         private void LetraPulsada(object sender, KeyEventArgs e)
         {
+            // Bucle para encontrar el botón coincidente con la tecla pulsada
             foreach (var item in grid.Children)
             {
                 if (e.Key.ToString() == (item as Button).Tag.ToString()) BuscarLetra(item as Button);
@@ -99,12 +89,20 @@ namespace ProyectoAhorcado
         private void BuscarLetra(Button b)
         {
             bool encontrado = false;
+            int contadorPosicion = 0;
 
             char[] caracteresPalabra = palabraAAdivinar.ToCharArray();
-
+             
+            // Bucle en el que recorremos los carácteres de la palabra que queremos adivinar
             foreach (char c in caracteresPalabra)
             {
-                if (c == char.Parse((string)b.Tag)) encontrado = true;
+                // Comprobamos si el carácter actual es el mismo que el que corresponde al botón pulsado
+                if (c == char.Parse((string)b.Tag))
+                {
+                    encontrado = true;
+                    (contenedorPalabraOculta.Children[contadorPosicion] as TextBlock).Text = c.ToString();
+                }
+                contadorPosicion++;
             }
 
             if (encontrado) LetraEncontrada(b);
@@ -113,11 +111,52 @@ namespace ProyectoAhorcado
         private void LetraEncontrada(Button b)
         {
             b.Style = (Style)this.Resources["estiloLetraEncontrada"];
-
         }
         private void LetraNoEncontrada(Button b)
         {
             b.Style = (Style)this.Resources["estiloLetraNoEncontrada"];
+            contadorFallos++;
+            if (contadorFallos == 9) FinDePartida();
+            else
+            {
+                fallosTextBlock.Text = "Numero de Fallos: " + contadorFallos;
+                // ahorcadoImage.Source = $"assets/{contadorFallos}.jpg";
+            }
+
+        }
+        private void FinDePartida()
+        {
+            MessageBox.Show("Has perdido!");
+            DeshabilitarBotones();
+        }
+        private void Rendirse_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Cobarde");
+            DeshabilitarBotones();
+        }
+        private void NuevaPartida_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Has elegido empezar una nueva partida");
+            contadorFallos = 0;
+            fallosTextBlock.Text = "Numero de Fallos: " + contadorFallos;
+            contenedorPalabraOculta.Children.Clear(); // Elimino el contenedor de la palabra oculta para poder generar una nueva dentro
+            GenerarPalabra();
+            HabilitarBotones();
+        }
+
+        private void DeshabilitarBotones()
+        {
+            foreach (var item in grid.Children)
+            {
+                (item as Button).IsEnabled = false;
+            }
+        }
+        private void HabilitarBotones()
+        {
+            foreach (var item in grid.Children)
+            {
+                (item as Button).Style = (Style)this.Resources["botonLetra"];
+            }
         }
     }
 }
