@@ -65,19 +65,17 @@
         <Style TargetType="{x:Type ScrollViewer}">
             <Setter Property="VerticalScrollBarVisibility" Value="Hidden"></Setter>
             <Setter Property="HorizontalScrollBarVisibility" Value="Auto"></Setter>
-
-
         </Style>
         <!-- Estilo para un botón con una letra coincidente -->
         <Style TargetType="{x:Type Button}" x:Key="estiloLetraEncontrada">
-            <Setter Property="IsEnabled" Value="False"></Setter>
+            <Setter Property="IsHitTestVisible" Value="False"></Setter>
             <Setter Property="Background" Value="#A5FF51"></Setter>
         </Style>
         
         <!-- Estilo para un botón con una letra que no coincida -->
         <Style TargetType="{x:Type Button}" x:Key="estiloLetraNoEncontrada">
             <Setter Property="Background" Value="#FF5151"></Setter>
-            <Setter Property="IsEnabled" Value="False"></Setter>
+            <Setter Property="IsHitTestVisible" Value="False"></Setter>
         </Style>
         
     </Window.Resources>
