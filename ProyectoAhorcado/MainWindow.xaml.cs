@@ -21,12 +21,11 @@ namespace ProyectoAhorcado
     public partial class MainWindow : Window
     {
         private List<String> abecedario = new List<String>() {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","ñ","o","p","q","r","s","t","u","v","w","x","y","z"};
-        private List<String> listaPalabras = new List<String>() { "JOAKIN", "ESTERNOCLEIDOMASTOIDEO", "ANDROID", "ESPAÑA", "FRANCIA", "ABECEDARIO", "PENINSULA", "PATATAS" };
-        private List<String> listaLetrasEncontradas = new List<String>();
-        private List<String> listaLetrasNoEncontradas = new List<String>();
+        private List<String> listaPalabras = new List<String>() { "JOAKIN", "ESTERNOCLEIDOMASTOIDEO", "ANDROID", "FRANCIA", "ABECEDARIO", "PENINSULA", "PATATAS" };
         private int contadorFallos = 0;
+        bool haGanado = false;
         Random seed = new Random();
-        private String palabraAAdivinar;
+        private string palabraAAdivinar;
 
 
         public MainWindow()
@@ -44,6 +43,7 @@ namespace ProyectoAhorcado
                 contenedorPalabraOculta.Children.Add(
                     new TextBlock
                     {
+                        Tag = c,
                         Text = "_",
                         Style = (Style)this.Resources["estiloPalabraOculta"]
                     });
@@ -79,7 +79,7 @@ namespace ProyectoAhorcado
             BuscarLetra(b);
         }
         private void LetraPulsada(object sender, KeyEventArgs e)
-        {
+        {  
             // Bucle para encontrar el botón coincidente con la tecla pulsada
             foreach (var item in grid.Children)
             {
@@ -89,33 +89,42 @@ namespace ProyectoAhorcado
         private void BuscarLetra(Button b)
         {
             bool encontrado = false;
-            int contadorPosicion = 0;
 
-            char[] caracteresPalabra = palabraAAdivinar.ToCharArray();
-             
             // Bucle en el que recorremos los carácteres de la palabra que queremos adivinar
-            foreach (char c in caracteresPalabra)
+            foreach (TextBlock tb in contenedorPalabraOculta.Children)
             {
-                // Comprobamos si el carácter actual es el mismo que el que corresponde al botón pulsado
-                if (c == char.Parse((string)b.Tag))
+                
+                if (tb.Tag.ToString() == b.Tag.ToString())
                 {
                     encontrado = true;
-                    (contenedorPalabraOculta.Children[contadorPosicion] as TextBlock).Text = c.ToString();
+                    tb.Text = (string)b.Tag;
                 }
-                contadorPosicion++;
             }
-
-            // Comprobamos si al jugador le queda alguna letra por descubrir o si ya ha ganado
-            /*bool haGanado = false;
-
-            foreach (TextBlock a in contenedorPalabraOculta.Children)
-            {
-                if (a.Text == "_") haGanado = false;
-            }
-            if (haGanado) FinDePartidaWin();*/
 
             if (encontrado) LetraEncontrada(b);
             else LetraNoEncontrada(b);
+
+            // Comprobamos si al jugador le queda alguna letra por descubrir o si ya ha ganado
+            StringBuilder palabraActual = new StringBuilder();
+            foreach (TextBlock tb in contenedorPalabraOculta.Children)
+            {
+                palabraActual.Append(tb.Text);
+                if (palabraActual.ToString().Contains("_")) haGanado = false;
+                else haGanado = true;
+            }
+
+            if (haGanado) 
+            { 
+                MuestraPalabra(); 
+                FinDePartidaWin(); 
+            }
+        }
+
+        private void MuestraPalabra()
+        {
+            contenedorPalabraOculta.Children.Clear();
+            contenedorPalabraOculta.Children.Add(new TextBlock{ Text = palabraAAdivinar,
+                                                                Style = (Style)this.Resources["estiloPalabraOculta"]});
         }
         private void LetraEncontrada(Button b)
         {
@@ -128,7 +137,7 @@ namespace ProyectoAhorcado
             if (contadorFallos == 9) FinDePartidaLose();
             else
             {
-                fallosTextBlock.Text = "Numero de Fallos: " + contadorFallos;
+                fallosTextBlock.Text = "Numero de Fallos: " + contadorFallos + "/8";
                 Uri ruta = new Uri($"assets/{contadorFallos}.jpg", UriKind.Relative);
                 ahorcadoImage.Source = new BitmapImage(ruta);
             }
@@ -140,21 +149,26 @@ namespace ProyectoAhorcado
         }
         private void FinDePartidaWin()
         {
-
+            MessageBox.Show("Has ganado !");
+            DeshabilitarBotones();
         }
         private void Rendirse_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Cobarde");
+            MessageBox.Show("Te has rendido");
             DeshabilitarBotones();
+            MuestraPalabra();
         }
         private void NuevaPartida_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Has elegido empezar una nueva partida");
             contadorFallos = 0;
-            fallosTextBlock.Text = "Numero de Fallos: " + contadorFallos;
+            // Ponemos a 0 el contador de fallos y ponemos la imagen correspondiente a los 0 fallos
+            fallosTextBlock.Text = "Numero de Fallos: " + contadorFallos +"/8";
+            Uri ruta = new Uri($"assets/1.jpg", UriKind.Relative);
+            ahorcadoImage.Source = new BitmapImage(ruta);
             contenedorPalabraOculta.Children.Clear(); // Elimino el contenedor de la palabra oculta para poder generar una nueva dentro
-            GenerarPalabra();
             HabilitarBotones();
+            GenerarPalabra();
         }
 
         private void DeshabilitarBotones()

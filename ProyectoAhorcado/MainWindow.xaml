@@ -21,6 +21,7 @@
         <!-- Estilo para los botones de las letras -->
         <Style TargetType="{x:Type Button}" x:Key="botonLetra">
             <Setter Property="Margin" Value="5"></Setter>
+            <Setter Property="IsEnabled" Value="True"></Setter>
         </Style>
         <!-- Estilo básico para aplicar la misma fuente a todo el proyecto -->
         <Style TargetType="{x:Type TextBlock}">
@@ -50,28 +51,26 @@
         </Style>
         <!-- Estilo para el contenedor de la palabra oculta-->
         <Style TargetType="{x:Type DockPanel}" x:Key="estiloContenedorPalabraOculta">
-            <Setter Property="Width" Value="300"></Setter>
             <Setter Property="Height" Value="50"></Setter>
             <Setter Property="HorizontalAlignment" Value="Center"></Setter>
         </Style>
         <!-- Estilo para la palabra a adivinar -->
-
         <Style TargetType="{x:Type TextBlock}" x:Key="estiloPalabraOculta">
             <Setter Property="TextAlignment" Value="Center"></Setter>
             <Setter Property="FontSize" Value="35"></Setter>
             <Setter Property="Margin" Value="5,0,5,0"></Setter>
+            <Setter Property="TextWrapping" Value="Wrap"></Setter>        
         </Style>
             <!-- Estilo para el scrollviewer, ocultamos la barra horizontal porque solo queremos desplazar la palabra horizontalmente-->
         <Style TargetType="{x:Type ScrollViewer}">
             <Setter Property="VerticalScrollBarVisibility" Value="Hidden"></Setter>
-            <Setter Property="HorizontalScrollBarVisibility" Value="Auto"></Setter>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Visible"></Setter>
         </Style>
         <!-- Estilo para un botón con una letra coincidente -->
         <Style TargetType="{x:Type Button}" x:Key="estiloLetraEncontrada">
             <Setter Property="IsHitTestVisible" Value="False"></Setter>
             <Setter Property="Background" Value="#A5FF51"></Setter>
         </Style>
-        
         <!-- Estilo para un botón con una letra que no coincida -->
         <Style TargetType="{x:Type Button}" x:Key="estiloLetraNoEncontrada">
             <Setter Property="Background" Value="#FF5151"></Setter>
@@ -85,24 +84,23 @@
         <DockPanel>
             <DockPanel DockPanel.Dock="Left" Width="300">
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
-                    <Button Style="{StaticResource botonesManejoPartida}" Click="NuevaPartida_Click">Nueva Partida</Button>
-                    <Button Style="{StaticResource botonesManejoPartida}" Click="Rendirse_Click">Rendirse</Button>
-                    <TextBlock x:Name="fallosTextBlock" Style="{StaticResource estiloContenedorFallos}">Número de fallos: 0</TextBlock>
+                    <Button Style="{StaticResource botonesManejoPartida}" Click="NuevaPartida_Click" IsDefault="True">Nueva Partida</Button>
+                    <Button Style="{StaticResource botonesManejoPartida}" Click="Rendirse_Click" IsCancel="True">Rendirse</Button>
+                    <TextBlock x:Name="fallosTextBlock" Style="{StaticResource estiloContenedorFallos}">Número de fallos: 0/8</TextBlock>
                 </StackPanel>
                 <Image x:Name="ahorcadoImage" Source="assets/1.jpg" Margin="10" ></Image>
                 <!--Imagen del ahorcado (rellena al ser el último hijo -->
             </DockPanel>
             <DockPanel>
-                <!-- Titulo --> 
+                <!-- Titulo -->
                 <TextBlock Style="{StaticResource titulo}" DockPanel.Dock="Top"> Ahorcado</TextBlock>
                 <!-- Palabra a adivinar -->
                 <ScrollViewer DockPanel.Dock="Top">
-                    <DockPanel x:Name="contenedorPalabraOculta" DockPanel.Dock="Top" Style="{StaticResource estiloContenedorPalabraOculta}"></DockPanel>
+                    <DockPanel x:Name="contenedorPalabraOculta" LastChildFill="False" Style="{StaticResource estiloContenedorPalabraOculta}"></DockPanel>
                 </ScrollViewer>
                 <!-- Letras -->
                 <UniformGrid x:Name="grid" Rows="3" Columns="9"></UniformGrid>
             </DockPanel>
-
         </DockPanel>
 
     </Grid>
